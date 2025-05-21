@@ -1,0 +1,21 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      - backend
+    restart: always
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: always
+    command: tunnel run
+    depends_on:
+      - frontend
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+
+  backend:
+    build:
+      context: ./backend
+    restart: always
